@@ -1,0 +1,53 @@
+{
+  "name": "peptide-pay",
+  "version": "0.2.0",
+  "description": "Official JavaScript/TypeScript SDK for peptide-pay.com — a Stripe-compatible payment API for high-risk merchants (crypto, peptides, research chemicals). Drop-in swap for Stripe checkout patterns.",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kinerette/peptide-pay-sdk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kinerette/peptide-pay-sdk/issues"
+  },
+  "homepage": "https://peptide-pay.com",
+  "license": "MIT",
+  "keywords": [
+    "peptides",
+    "payment",
+    "crypto",
+    "stripe-alternative",
+    "high-risk",
+    "usdc"
+  ],
+  "devDependencies": {
+    "tsup": "^8.3.5",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.4",
+    "@types/node": "^20.17.0"
+  }
+}
