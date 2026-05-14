@@ -128,7 +128,13 @@ export class PeptidePay {
       'User-Agent': `peptide-pay-node/${SDK_VERSION}`,
     };
 
-    let init: RequestInit = { method, headers };
+    // Abort after 8 s. Lambda maxDuration = 10 s; leaving 2 s headroom so
+    // the Lambda can log the error and return a clean JSON response to the
+    // merchant rather than hard-cutting the connection mid-flight.
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 8000);
+
+    let init: RequestInit = { method, headers, signal: controller.signal };
     if (body !== undefined && method !== 'GET') {
       headers['Content-Type'] = 'application/json';
       init = { ...init, body: JSON.stringify(body) };
@@ -137,11 +143,16 @@ export class PeptidePay {
     let response: Response;
     try {
       response = await this.#fetch(url, init);
-    } catch {
+    } catch (err) {
+      const isAbort = err instanceof Error && err.name === 'AbortError';
       throw new APIError({
-        message: `peptide-pay: network error reaching ${safeUrl(url)}`,
-        code: 'network_error',
+        message: isAbort
+          ? `peptide-pay: request timed out after 8s reaching ${safeUrl(url)}`
+          : `peptide-pay: network error reaching ${safeUrl(url)}`,
+        code: isAbort ? 'request_timeout' : 'network_error',
       });
+    } finally {
+      clearTimeout(timeoutId);
     }
 
     const requestId =

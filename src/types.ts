@@ -39,6 +39,21 @@ export interface CheckoutSessionCreateParams {
   cancel_url: string;
   metadata?: Record<string, string>;
   customer_email?: string;
+  /**
+   * BCP 47 primary-language tag for the hosted checkout UI.
+   * When set, overrides the customer's browser Accept-Language so the
+   * checkout renders in the merchant's store language.
+   *
+   * Supported values: 'en' | 'fr' | 'de' | 'it' | 'es' | 'nl' |
+   *   'pt' | 'ru' | 'pl' | 'tr' | 'zh' | 'ja' | 'ko'
+   *
+   * Default when absent: 'en' (Accept-Language fallback on the server).
+   *
+   * @example
+   *   // German store → always show checkout in German
+   *   pp.checkout.sessions.create({ ..., locale: 'de' })
+   */
+  locale?: 'en' | 'fr' | 'de' | 'it' | 'es' | 'nl' | 'pt' | 'ru' | 'pl' | 'tr' | 'zh' | 'ja' | 'ko';
 }
 
 // ───────────────────────── Webhooks ─────────────────────────
